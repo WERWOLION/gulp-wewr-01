@@ -69,7 +69,7 @@ function html () {
 function css () {
   return src(path.src.css)
        .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
-      //.pipe(gulp.dest('./css'))
+      // .pipe(gulp.dest('./css'))
 
       .pipe(dest(path.build.css))  // функция команды для гаупа
       .pipe(browsersync.stream())  ;  
