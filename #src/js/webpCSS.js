@@ -1,4 +1,3 @@
-alert("hello TEST") ;
 
 // функция проверкаи браузера на  CSS - WEBP
 
