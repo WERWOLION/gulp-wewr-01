@@ -46,8 +46,9 @@ let {src, dest} = require("gulp"),
     rename = require('gulp-rename'),
     terser = require('gulp-terser'),// пл мини js
     // ---------пл IMG -------------------
-    imagemin = require('gulp-imagemin');// пл мини IMG
-    webp = require('gulp-webp');
+    imagemin = require('gulp-imagemin'),// пл мини IMG
+    webp = require('gulp-webp'),
+    webp_html = require('gulp-webp-html'); // плг авто пути картинок + веб
 
   // END -- let 
 
@@ -67,8 +68,9 @@ function browsSync(params){
 
 //! функция временной сборки на лок сервер
 function html () {
-  return src(path.src.html)
+  return src(path.src.html) 
       .pipe(fileinclude())
+      .pipe(webp_html()) // пл авто пути картинок!
       .pipe(dest(path.build.html))  // функция команды для гаупа
       .pipe(browsersync.stream())
       
