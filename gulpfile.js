@@ -1,5 +1,5 @@
 
-let project_folder="result";  // конечная папка компиляции
+let project_folder="11result";  // конечная папка компиляции
 let source_folder="#src";  // папка исходников 
 
 let path={   // пути
@@ -49,6 +49,7 @@ let {src, dest} = require("gulp"),
     imagemin = require('gulp-imagemin'),// пл мини IMG
     webp = require('gulp-webp'),
     webp_html = require('gulp-webp-html'); // плг авто пути картинок + веб
+    webp_css = require('gulp-webpcss'); // плг авто пути картинок + веб
 
   // END -- let 
 
@@ -88,6 +89,7 @@ function css () {
           })
        )  //  команда autoprefixer
 
+      .pipe(webp_css({webpClass: '.webp',noWebpClass: '.no-webp'}) ) // выгрузка файла CSS
       .pipe(dest(path.build.css))  // выгрузка файла CSS
       .pipe(cleanCSS()) // функция сжатия 
       .pipe(rename({extname:".min.css"})) // функция переименования   
@@ -110,11 +112,8 @@ function js () {
 
 function image () {
   return src(path.src.img) // обращаемся к исходникам
-      .pipe(          //webp
-          webp({
-              quality: 70
-          })
-        )  
+
+      .pipe( webp({quality: 70 }))  
       .pipe(dest(path.build.img))  // выгрузка картинок webp
 
       .pipe(src(path.src.img))  // заново обращаемся к исходникам

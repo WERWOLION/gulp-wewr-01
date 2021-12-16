@@ -1,3 +1,6 @@
+.no-webp body {
+  background-image: url(../img/615871_0ca9c09300.png); }
+
 body {
   font-size: 16px;
 }
@@ -10,3 +13,5 @@ h1 {
 .header {
   background-color: aquamarine;
 }
+
+.webp body { background-image: url(../img/615871_0ca9c09300.webp); }
