@@ -44,8 +44,10 @@ let {src, dest} = require("gulp"),
     group_media = require('gulp-group-css-media-queries'), // сборщик SCSS и css файлов в 1
     cleanCSS = require('gulp-clean-css'), //  очистка и сжатие конечного css файла
     rename = require('gulp-rename'),
-    terser = require('gulp-terser');// пл мини js
-   imagemin = require('gulp-imagemin');// пл мини IMG
+    terser = require('gulp-terser'),// пл мини js
+    // ---------пл IMG -------------------
+    imagemin = require('gulp-imagemin');// пл мини IMG
+    webp = require('gulp-webp');
 
   // END -- let 
 
@@ -105,7 +107,16 @@ function js () {
 }
 
 function image () {
-  return src(path.src.img)
+  return src(path.src.img) // обращаемся к исходникам
+      .pipe(          //webp
+          webp({
+              quality: 70
+          })
+        )  
+      .pipe(dest(path.build.img))  // выгрузка картинок webp
+
+      .pipe(src(path.src.img))  // заново обращаемся к исходникам
+//-----------.pipe пл imagemin
       .pipe(imagemin([
           imagemin.gifsicle({interlaced: true}),
           imagemin.mozjpeg({quality: 75, progressive: true}),
@@ -119,7 +130,7 @@ function image () {
           ]) // imagemin([
       )  //.pipe пл imagemin
 
-      .pipe(dest(path.build.img))  // функция команды для гаупа
+      .pipe(dest(path.build.img))  // выгрузка картинок imagemin
       .pipe(browsersync.stream())     
 }
 
@@ -128,18 +139,19 @@ function watchFiles(params){ //  обн изменений
   gulp.watch([path.watch.html], html); // следить за  html + ,html= функция
   gulp.watch([path.watch.css], css); // следить за  html + ,html= функция
   gulp.watch([path.watch.js], js); // следить за  js
- // gulp.watch([path.watch.img], image); // следить за картинками
+  gulp.watch([path.watch.img], image); // следить за картинками
 }
 
 function clean(params){  // удаление врем ппки
   return del(path.clean);
 }
 
-let build = gulp.series(clean , gulp.parallel(js, css, html) ); // gulp.parallel - выполнение функ поралельно
+let build = gulp.series(clean , gulp.parallel(js, css, html, image) ); // gulp.parallel - выполнение функ поралельно
 let watch = gulp.parallel(build, watchFiles, browsSync); // в скобках функции
 
 
 
+exports.jimage = image ;
 exports.js = js ;
 exports.css = css ;
 exports.html = html ;
