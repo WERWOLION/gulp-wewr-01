@@ -48,8 +48,10 @@ let {src, dest} = require("gulp"),
     // ---------пл IMG -------------------
     imagemin = require('gulp-imagemin'),// пл мини IMG
     webp = require('gulp-webp'),
-    webp_html = require('gulp-webp-html'); // плг авто пути картинок + веб
-    webp_css = require('gulp-webpcss'); // плг авто пути картинок + веб
+    webp_html = require('gulp-webp-html'), // плг авто пути картинок + веб
+    webp_css = require('gulp-webpcss'), // плг авто пути картинок + веб
+    svg_sprite = require('gulp-svg-sprite'); // плг авто пути картинок + веб
+    
 
   // END -- let 
 
@@ -135,6 +137,19 @@ function image () {
       .pipe(browsersync.stream())     
 }
 
+gulp.task("svg_sprite", function(){
+  return gulp.src([source_folder + "/iconsprite/*.svg"])
+
+  .pipe(svg_sprite({
+    mode:{
+      stack:{
+      sprite: "../spriteIcons/spriteIcons.svg", // команда gulp svg_sprite
+      example: true
+    }}, 
+
+  }))
+  .pipe(dest(path.build.img)) // выгрузка путь
+});
 
 function watchFiles(params){ //  обн изменений
   gulp.watch([path.watch.html], html); // следить за  html + ,html= функция
