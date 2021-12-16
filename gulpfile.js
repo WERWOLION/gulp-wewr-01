@@ -89,7 +89,7 @@ function css () {
           })
        )  //  команда autoprefixer
 
-      .pipe(webp_css({webpClass: '.webp',noWebpClass: '.no-webp'}) ) // выгрузка файла CSS
+      .pipe(webp_css() ) // выгрузка файла CSS  // {webpClass: '.webp',noWebpClass: '.no-webp'}
       .pipe(dest(path.build.css))  // выгрузка файла CSS
       .pipe(cleanCSS()) // функция сжатия 
       .pipe(rename({extname:".min.css"})) // функция переименования   

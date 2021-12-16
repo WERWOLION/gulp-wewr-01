@@ -11,13 +11,17 @@ h1 {
   background-color: aquamarine;
 }
 
-.no-webp .wer {
-  background-image: url(../img/3www.png); }
-
 .wer {
   height: 300px;
   width: 300px;
   font-size: 33px;
+  background-image: url("../img/3www.png");
+}
+
+div {
+  background-image: url("../img/3www.png");
 }
 
 .webp .wer { background-image: url(../img/3www.webp); }
+
+.webp div { background-image: url(../img/3www.webp); }
