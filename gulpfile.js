@@ -1,5 +1,5 @@
 
-let project_folder="11result";  // конечная папка компиляции
+let project_folder="0result";  // конечная папка компиляции
 let source_folder="#src";  // папка исходников 
 
 let path={   // пути
@@ -8,8 +8,7 @@ let path={   // пути
     css:project_folder+"/css/",
     js:project_folder+"/js/",
     img:project_folder+"/img/",
-    fonts:project_folder+"/fonts/",
-    
+    fonts:project_folder+"/fonts/", 
   },
 
   src:{   // Исходники
@@ -47,18 +46,17 @@ let {src, dest} = require("gulp"),
     terser = require('gulp-terser'),// пл мини js
     // ---------пл IMG -------------------
     imagemin = require('gulp-imagemin'),// пл мини IMG
-    webp = require('gulp-webp'),
+    webp = require('gulp-webp'),  // Модные форматы Картинок
     webp_html = require('gulp-webp-html'), // плг авто пути картинок + веб
     webp_css = require('gulp-webpcss'), // плг авто пути картинок + веб
     svg_sprite = require('gulp-svg-sprite'); // плг авто пути картинок + веб
-    
-
+    // ---------Шрифты-------------------
+    const ttf2woff = require('gulp-ttf2woff'); // плг авто пути картинок + веб
+    const ttf2woff2 = require('gulp-ttf2woff2'); // плг авто пути картинок + веб
+  //  const fontgen = require('gulp-fontgen');
   // END -- let 
 
 const fileinclude = require("gulp-file-include"); // плагин сборки файлов
-
-
-
 //END============= пачке переменныхъ===============END
 
 function browsSync(params){
@@ -112,6 +110,17 @@ function js () {
       
 }
 
+function fonts2(params){  // 1.07 время
+  return src(path.src.fonts) // загрузка
+    .pipe(ttf2woff2())
+    .pipe(dest(path.build.fonts))  // выгрузка шрифтов
+}
+function fonts1(params){  // 1.07 время
+  return src(path.src.fonts)// загрузка
+        .pipe(ttf2woff())
+        .pipe(dest(path.build.fonts)) // выгрузка шрифтов
+}
+
 function image () {
   return src(path.src.img) // обращаемся к исходникам
 
@@ -162,12 +171,13 @@ function clean(params){  // удаление врем ппки
   return del(path.clean);
 }
 
-let build = gulp.series(clean , gulp.parallel(js, css, html, image) ); // gulp.parallel - выполнение функ поралельно
+let build = gulp.series(clean , gulp.parallel(js, css, html, image, fonts2) ); // gulp.parallel - выполнение функ поралельно
 let watch = gulp.parallel(build, watchFiles, browsSync); // в скобках функции
 
 
-
-exports.jimage = image ;
+exports.fonts2 = fonts2;
+exports.fonts1 = fonts1;
+exports.image = image ;
 exports.js = js ;
 exports.css = css ;
 exports.html = html ;
