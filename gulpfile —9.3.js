@@ -174,11 +174,11 @@ gulp.task("svg_sprite", function(){
 });
 
 
-// JS-функция записи информации в fontsRun.scss
-function fontsStyleRun(params) {
-  let file_content = fs.readFileSync(source_folder + '/scss/fontsRun.scss');
+// JS-функция записи информации в fonts.scss
+function fontsStyle(params) {
+  let file_content = fs.readFileSync(source_folder + '/scss/fonts.scss');
   if (file_content == '') {
-    fs.writeFile(source_folder + '/scss/fontsRun.scss', '', cb);
+    fs.writeFile(source_folder + '/scss/fonts.scss', '', cb);
     return fs.readdir(path.build.fonts, function (err, items) {
       if (items) {
         let c_fontname;
@@ -186,13 +186,13 @@ function fontsStyleRun(params) {
           let fontname = items[i].split('.');
           fontname = fontname[0];
           if (c_fontname != fontname) {
-            fs.appendFile(source_folder + '/scss/fontsRun.scss', '@include font("' + fontname + '", "' + fontname + '", "400", "normal");\r\n', cb);
+            fs.appendFile(source_folder + '/scss/fonts.scss', '@include font("' + fontname + '", "' + fontname + '", "400", "normal");\r\n', cb);
           }
           c_fontname = fontname;
         } } }) }
       }
   function cb() { }
-// ----END -----JS-функция записи информации в fontsRun.scss   ----END -----
+// ----END -----JS-функция записи информации в fonts.scss   ----END -----
 
 function watchFiles(params){ //  обн изменений
   gulp.watch([path.watch.html], html); // следить за  html + ,html= функция
@@ -205,11 +205,11 @@ function clean(params){  // удаление врем ппки
   return del(path.clean);
 }
 
-let build = gulp.series(clean , gulp.parallel(js, css, html, image, fonts2), fontsStyleRun ); // gulp.parallel - выполнение функ поралельно
+let build = gulp.series(clean , gulp.parallel(js, css, html, image, fonts2), fontsStyle ); // gulp.parallel - выполнение функ поралельно
 let watch = gulp.parallel(build, watchFiles, browsSync); // в скобках функции
 
 
-exports.fontsStyleRun = fontsStyleRun;
+exports.fontsStyle = fontsStyle;
 exports.fonts2 = fonts2;
 exports.fonts1 = fonts1;
 exports.image = image ;
