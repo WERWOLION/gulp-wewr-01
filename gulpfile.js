@@ -1,6 +1,8 @@
 
-let project_folder="0result";  // конечная папка компиляции
-let source_folder="#src";  // папка исходников 
+const  project_folder="0result";  // конечная папка компиляции
+const  source_folder="#src";  // папка исходников 
+
+const fs = require("fs"); // спец переменная для подл шрифтов в CSS
 
 let path={   // пути
   build:{   // результат
@@ -154,7 +156,7 @@ gulp.task ("otf2ttf", function(){ // фн .otf - шрифты
         format: ["ttf"]
     }))  
       .pipe(dest( source_folder + "/fonts/")) ; 
-});
+}); // END ---- фн .otf - шрифты
 
 
 gulp.task("svg_sprite", function(){
@@ -170,6 +172,27 @@ gulp.task("svg_sprite", function(){
   }))
   .pipe(dest(path.build.img)) // выгрузка путь
 });
+
+
+// JS-функция записи информации в fonts.scss
+function fontsStyle(params) {
+  let file_content = fs.readFileSync(source_folder + '/scss/fonts.scss');
+  if (file_content == '') {
+    fs.writeFile(source_folder + '/scss/fonts.scss', '', cb);
+    return fs.readdir(path.build.fonts, function (err, items) {
+      if (items) {
+        let c_fontname;
+        for (var i = 0; i < items.length; i++) {
+          let fontname = items[i].split('.');
+          fontname = fontname[0];
+          if (c_fontname != fontname) {
+            fs.appendFile(source_folder + '/scss/fonts.scss', '@include font("' + fontname + '", "' + fontname + '", "400", "normal");\r\n', cb);
+          }
+          c_fontname = fontname;
+        } } }) }
+      }
+  function cb() { }
+// ----END -----JS-функция записи информации в fonts.scss   ----END -----
 
 function watchFiles(params){ //  обн изменений
   gulp.watch([path.watch.html], html); // следить за  html + ,html= функция
