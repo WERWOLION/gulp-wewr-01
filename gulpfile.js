@@ -205,10 +205,11 @@ function clean(params){  // удаление врем ппки
   return del(path.clean);
 }
 
-let build = gulp.series(clean , gulp.parallel(js, css, html, image, fonts2) ); // gulp.parallel - выполнение функ поралельно
+let build = gulp.series(clean , gulp.parallel(js, css, html, image, fonts2), fontsStyle ); // gulp.parallel - выполнение функ поралельно
 let watch = gulp.parallel(build, watchFiles, browsSync); // в скобках функции
 
 
+exports.fontsStyle = fontsStyle;
 exports.fonts2 = fonts2;
 exports.fonts1 = fonts1;
 exports.image = image ;
