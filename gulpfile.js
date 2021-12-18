@@ -1,5 +1,4 @@
-
-const  project_folder="0result";  // конечная папка компиляции
+const project_folder="©Result_" + require("path").basename(__dirname);  // конечная папка компиляции
 const  source_folder="#src";  // папка исходников 
 
 const fs = require("fs"); // спец переменная для подл шрифтов в CSS
