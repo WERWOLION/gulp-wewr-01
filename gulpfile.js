@@ -1,9 +1,6 @@
 
-// let project_folder="0result";  // конечная папка компиляции
-const project_folder="©Result_" + require("path").basename(__dirname);  // конечная папка компиляции
-const source_folder="#src";  // папка исходников 
-
-const fs = require("fs");  // переменная подключения шрифтов в CSS
+let project_folder="0result";  // конечная папка компиляции
+let source_folder="#src";  // папка исходников 
 
 let path={   // пути
   build:{   // результат
@@ -52,11 +49,13 @@ let {src, dest} = require("gulp"),
     webp = require('gulp-webp'),  // Модные форматы Картинок
     webp_html = require('gulp-webp-html'), // плг авто пути картинок + веб
     webp_css = require('gulp-webpcss'), // плг авто пути картинок + веб
-    svg_sprite = require('gulp-svg-sprite'); // плг авто пути картинок + веб
+    svg_sprite = require('gulp-svg-sprite'); // плг спрайт
     // ---------Шрифты-------------------
     const ttf2woff = require('gulp-ttf2woff'); // плг 
     const ttf2woff2 = require('gulp-ttf2woff2'); // плг 
-    const fonter = require('gulp-fonter'); // плг gulp-fonter
+    const fonter = require('gulp-fonter'); // плг - формат OTF в TTF
+    
+ ;
   // END -- let 
 
 const fileinclude = require("gulp-file-include"); // плагин сборки файлов
@@ -149,12 +148,14 @@ function image () {
       .pipe(browsersync.stream())     
 }
 
-// отдельный вызов // gulp otf2ttf  // gulp svg_sprite
-gulp.task("otf2ttf", function(){
-  return gulp.src([source_folder + "/fons/*.otf"])
-      .pipe ( fonter ({formats:["ttf"] }) )
-      .pipe (dest(source_folder + "/fons/"));
+gulp.task ("otf2ttf", function(){ // фн .otf - шрифты
+  return src([source_folder + "/fonts/*.otf"])
+    .pipe(fonter({
+        format: ["ttf"]
+    }))  
+      .pipe(dest( source_folder + "/fonts/")) ; 
 });
+
 
 gulp.task("svg_sprite", function(){
   return gulp.src([source_folder + "/iconsprite/*.svg"])
@@ -169,29 +170,6 @@ gulp.task("svg_sprite", function(){
   }))
   .pipe(dest(path.build.img)) // выгрузка путь
 });
-//END отдельный вызов END
-function fontsRun(params){ //  ФН  запуска путей = шрифтов в CSS
-  let file_content = fs.readFileSync(source_folder + '/scss/fontsRun.scss');
-   if (file_content == '') {
-      fs.writeFile(source_folder + '/scss/fontsRun.scss', '', cb);
-       return fs.readdir(path.build.fonts, function (err, items) { 
-         if (items) {
-            let c_fontname;
-            for (var i = 0; i < items.length; i++) {
-            let fontname = items[i].split('.'); fontname = fontname[0]; 
-            if (c_fontname != fontname) { 
-               fs.appendFile(source_folder + '/scss/fontsRun.scss', '@include font("' + fontname + '", "' + fontname + '", "400", "normal");\r\n', cb);
-             }
-                c_fontname = fontname; }
-           }
-           }) 
-          }
-}
-
-function cb(params){ //  ФН  кулбек подключения шрифтов в CSS
-
-}
-
 
 function watchFiles(params){ //  обн изменений
   gulp.watch([path.watch.html], html); // следить за  html + ,html= функция
@@ -204,11 +182,10 @@ function clean(params){  // удаление врем ппки
   return del(path.clean);
 }
 
-let build = gulp.series(clean , gulp.parallel(js, css, html, image, fonts2),fontsRun); // gulp.parallel - выполнение функ поралельно
+let build = gulp.series(clean , gulp.parallel(js, css, html, image, fonts2) ); // gulp.parallel - выполнение функ поралельно
 let watch = gulp.parallel(build, watchFiles, browsSync); // в скобках функции
 
 
-exports.fontsRun = fontsRun;
 exports.fonts2 = fonts2;
 exports.fonts1 = fonts1;
 exports.image = image ;
